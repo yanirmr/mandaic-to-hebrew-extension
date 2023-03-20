@@ -8,11 +8,14 @@ function replaceMandaicCharacters() {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
       const originalText = element.textContent;
-	  const regex = new RegExp(`[${mandaicLetters}\u{0856}]`, "g");
+	  const regex = new RegExp(`[${mandaicLetters}\u{0856}\u{0857}]`, "g");
 	  const newText = originalText.replace(regex, (match) => {
       if (match === '\u{0856}') {
         return '\u{05D3}\u{05B7}';
         }
+      else if (match === '\u{0857}'){
+        return '\u{05DB}\u{05D9}';
+      }
       const index = mandaicLetters.indexOf(match);
       return hebrewLetters.charAt(index);
      });
