@@ -1,5 +1,5 @@
 {
-  "name": "Mandaic Transcriber Plugin",
+  "name": "Mandaic to Hebrew Transliteration Plugin",
   "version": "1.0",
   "manifest_version": 3,
   "host_permissions": [
