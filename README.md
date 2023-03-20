@@ -9,8 +9,8 @@ Whether you're a scholar, researcher, or simply interested in Mandaic culture an
 
 ## Installation
 
-Mandaic to Hebrew can be installed from the Chrome Web Store using the following link (note that it may not be available there yet and will be completed later):
-[link](link) 
+Mandaic to Hebrew can be installed from the Chrome Web Store using the following link:
+[link](https://chrome.google.com/webstore/detail/mandaic-transcriber-plugi/bfobmamcipjifpnpapgpejfjdcafgjjb/)
 
 To install Mandaic to Hebrew manually, follow these steps:
 
