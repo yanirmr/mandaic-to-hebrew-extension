@@ -1,6 +1,6 @@
 {
   "name": "Mandaic to Hebrew Transliteration Plugin",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 3,
   "host_permissions": [
    "<all_urls>"
