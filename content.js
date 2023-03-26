@@ -4,42 +4,31 @@ function replaceMandaicCharacters(contentDocument) {
   const hebrewLetters = "אבגדחוזהטיכלמנסעפצקרשת";
   const targetTags = ["b", "a"];
 
-  // Replace Mandaic characters in specific HTML tags
+  const replaceText = (originalText) => {
+    const regex = new RegExp(`[${mandaicLetters}\u{0856}\u{0857}]`, "g");
+    return originalText.replace(regex, (match) => {
+      if (match === "\u{0856}") {
+        return "\u{05D3}\u{05B7}";
+      } else if (match === "\u{0857}") {
+        return "\u{05DB}\u{05D9}";
+      }
+      const index = mandaicLetters.indexOf(match);
+      return hebrewLetters.charAt(index);
+    });
+  };
+
   for (const tag of targetTags) {
     const elements = contentDocument.getElementsByTagName(tag);
     for (const element of elements) {
-      const originalText = element.textContent;
       if (tag === "a") {
         const originalText = element.childNodes[0]?.nodeValue || "";
-        const regex = new RegExp(`[${mandaicLetters}\u{0856}\u{0857}]`, "g");
-        const newText = originalText.replace(regex, (match) => {
-          if (match === "\u{0856}") {
-            return "\u{05D3}\u{05B7}";
-          } else if (match === "\u{0857}") {
-            return "\u{05DB}\u{05D9}";
-          }
-          const index = mandaicLetters.indexOf(match);
-          return hebrewLetters.charAt(index);
-        });
+        const newText = replaceText(originalText);
         if (newText !== originalText) {
           element.childNodes[0].nodeValue = newText;
         }
       } else {
-        const regex = new RegExp(`[${mandaicLetters}\u{0856}\u{0857}]`, "g");
-        const newText = originalText.replace(regex, (match) => {
-          if (match === "\u{0856}") {
-            return "\u{05D3}\u{05B7}";
-          } else if (match === "\u{0857}") {
-            return "\u{05DB}\u{05D9}";
-          }
-          const index = mandaicLetters.indexOf(match);
-          return hebrewLetters.charAt(index);
-        });
-        // const regex = new RegExp(`[${mandaicLetters}]`, "g");
-        //  const newText = originalText.replace(regex, (match) => {
-        //  const index = mandaicLetters.indexOf(match);
-        //return hebrewLetters.charAt(index);
-        // });
+        const originalText = element.textContent;
+        const newText = replaceText(originalText);
         if (newText !== originalText) {
           element.textContent = newText;
         }
@@ -47,7 +36,6 @@ function replaceMandaicCharacters(contentDocument) {
     }
   }
 
-  // Replace Mandaic characters in all text nodes on the webpage
   const textNodes = contentDocument.evaluate(
     "//text()",
     contentDocument,
@@ -58,45 +46,36 @@ function replaceMandaicCharacters(contentDocument) {
   for (let i = 0; i < textNodes.snapshotLength; i++) {
     const textNode = textNodes.snapshotItem(i);
     const originalText = textNode.textContent;
-    const regex = new RegExp(`[${mandaicLetters}\u{0856}\u{0857}]`, "g");
-    const newText = originalText.replace(regex, (match) => {
-      if (match === "\u{0856}") {
-        return "\u{05D3}\u{05B7}";
-      } else if (match === "\u{0857}") {
-        return "\u{05DB}\u{05D3}";
-      }
-      const index = mandaicLetters.indexOf(match);
-      return hebrewLetters.charAt(index);
-    });
+    const newText = replaceText(originalText);
     if (newText !== originalText) {
       textNode.textContent = newText;
     }
   }
 }
 
+
 (function () {
   replaceMandaicCharacters(document);
+  addLinkEventListeners();
 })();
 
 
-const observer = new MutationObserver((mutations) => {
-  for (const mutation of mutations) {
-    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-      replaceMandaicCharacters(document);
-    }
+function addLinkEventListeners() {
+  const links = document.querySelectorAll("a");
+  for (const link of links) {
+    link.addEventListener("click", () => {
+      setTimeout(() => {
+        replaceMandaicCharacters(document);
+      }, 500);
+    });
   }
-});
-
-observer.observe(document, {
-  childList: true,
-  subtree: true,
-});
+}
 
 
 let lastContentHash = '';
 
 function checkForContentChanges() {
-  const iframe = document.querySelector('iframe');
+  const iframe = document.querySelector("iframe");
   if (!iframe || !iframe.contentDocument) {
     return;
   }
@@ -106,9 +85,9 @@ function checkForContentChanges() {
 
   if (currentHash !== lastContentHash) {
     replaceMandaicCharacters(iframe.contentDocument);
+    addLinkEventListeners(); //
     lastContentHash = currentHash;
   }
-  
 }
 
 function hashString(str) {
